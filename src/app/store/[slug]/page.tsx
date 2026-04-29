@@ -2,13 +2,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search, ShoppingBag, ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
 import CheckoutButton from "./CheckoutButton";
+
+type StoreWithProducts = Prisma.StoreGetPayload<{
+  include: { products: true }
+}>;
 
 export default async function StorefrontPage({ params }: { params: { slug: string } }) {
   
   // Try to find the real store in DB
-  let store = null;
+  let store: StoreWithProducts | null = null;
   try {
     store = await prisma.store.findUnique({
       where: { slug: params.slug },
@@ -107,7 +112,7 @@ export default async function StorefrontPage({ params }: { params: { slug: strin
       {/* Product Grid */}
       <main className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {store.products.map(product => (
+          {store.products.map((product: any) => (
             <div key={product.id} className="group flex flex-col h-full bg-surface-glass border border-border-glass rounded-3xl overflow-hidden p-3 relative hover:border-primary/50 transition-colors">
               <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-6 bg-surface">
                 {product.imageUrl && (

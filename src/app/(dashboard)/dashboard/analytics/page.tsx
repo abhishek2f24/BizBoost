@@ -23,6 +23,7 @@ type OverviewData = {
   stuckPages: Array<{ page: string; count: number }>;
   funnelSteps: Array<{ step: string; total: number; completed: number; dropoffRate: number }>;
   deviceBreakdown: Array<{ device: string; count: number }>;
+  error?: string;
 };
 
 export default function AnalyticsDashboard() {

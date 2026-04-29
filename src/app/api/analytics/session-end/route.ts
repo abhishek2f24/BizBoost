@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
     if (!sessionId) return NextResponse.json({ ok: false }, { status: 400 });
 
-    await prisma.analyticsSession.update({
+    await prisma.analyticsSession.updateMany({
       where: { sessionId },
       data: {
         endedAt: new Date(),

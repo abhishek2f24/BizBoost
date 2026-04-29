@@ -14,6 +14,22 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const storeId = session.storeId ?? "demo-store-001";
+
+  // Safety check: ensure the store exists in the database
+  try {
+    await prisma.store.upsert({
+      where: { id: storeId },
+      update: {},
+      create: {
+        id: storeId,
+        name: session.storeName ?? "My Store",
+        slug: "store-" + storeId.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+      }
+    });
+  } catch (e) {
+    console.error("Failed to ensure store exists:", e);
+  }
+
   let productCount = 0;
   try {
     productCount = await prisma.product.count({ where: { storeId } });

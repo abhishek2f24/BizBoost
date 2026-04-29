@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 const DEMO_USER = {
   id: "demo-user-001",
@@ -24,6 +25,27 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
     }
+
+    // Ensure the demo user and store exist in the database to prevent foreign key errors
+    await prisma.store.upsert({
+      where: { id: DEMO_USER.storeId },
+      update: {},
+      create: {
+        id: DEMO_USER.storeId,
+        name: DEMO_USER.storeName,
+        slug: "demo-store",
+      }
+    });
+
+    await prisma.user.upsert({
+      where: { id: DEMO_USER.id },
+      update: {},
+      create: {
+        id: DEMO_USER.id,
+        email: DEMO_USER.email,
+        name: DEMO_USER.name,
+      }
+    });
 
     const session = {
       userId: DEMO_USER.id,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Store, Globe, Phone, CreditCard, Palette, CheckCircle, Copy, ExternalLink, Zap } from "lucide-react";
+import { Store, Globe, Phone, CreditCard, Palette, CheckCircle, Copy, ExternalLink, Zap, AlertCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 const THEMES = [

@@ -26,17 +26,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Ensure the demo user and store exist in the database to prevent foreign key errors
-    await prisma.store.upsert({
-      where: { id: DEMO_USER.storeId },
-      update: {},
-      create: {
-        id: DEMO_USER.storeId,
-        name: DEMO_USER.storeName,
-        slug: "demo-store",
-      }
-    });
-
     await prisma.user.upsert({
       where: { id: DEMO_USER.id },
       update: {},
@@ -44,6 +33,18 @@ export async function POST(req: NextRequest) {
         id: DEMO_USER.id,
         email: DEMO_USER.email,
         name: DEMO_USER.name,
+      }
+    });
+
+    // Ensure the demo store exists in the database to prevent foreign key errors
+    await prisma.store.upsert({
+      where: { id: DEMO_USER.storeId },
+      update: {},
+      create: {
+        id: DEMO_USER.storeId,
+        userId: DEMO_USER.id,
+        name: DEMO_USER.name,
+        slug: "demo-store",
       }
     });
 

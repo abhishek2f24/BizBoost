@@ -22,6 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       update: {},
       create: {
         id: storeId,
+        userId: session.userId,
         name: session.storeName ?? "My Store",
         slug: "store-" + storeId.toLowerCase().replace(/[^a-z0-9]/g, "-"),
       }

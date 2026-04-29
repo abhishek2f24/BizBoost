@@ -2,18 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search, ShoppingBag, ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
 import CheckoutButton from "./CheckoutButton";
-
-type StoreWithProducts = Prisma.StoreGetPayload<{
-  include: { products: true }
-}>;
 
 export default async function StorefrontPage({ params }: { params: { slug: string } }) {
   
   // Try to find the real store in DB
-  let store: StoreWithProducts | null = null;
+  let store: any = null;
   try {
     store = await prisma.store.findUnique({
       where: { slug: params.slug },

@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_KEY || "");
 
-export const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+export const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function generateContent(prompt: string) {
   try {
@@ -26,7 +26,7 @@ export async function generateJSON(prompt: string) {
     }
 
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash-latest",
+      model: "gemini-1.5-flash",
       generationConfig: { responseMimeType: "application/json" }
     });
 

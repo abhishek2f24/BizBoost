@@ -1,8 +1,11 @@
 import OpenAI from "openai";
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy instantiation — avoids build-time crash if OPENAI_API_KEY is missing
+function getOpenAI() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY || "sk-placeholder",
+  });
+}
 
 export async function generateProductDescription({
   productName,
@@ -17,6 +20,7 @@ export async function generateProductDescription({
   imageUrl?: string;
   language?: string;
 }) {
+  const openai = getOpenAI();
   const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
     {
       role: "system",
@@ -34,10 +38,7 @@ export async function generateProductDescription({
       role: "user",
       content: imageUrl
         ? [
-            {
-              type: "image_url" as const,
-              image_url: { url: imageUrl },
-            },
+            { type: "image_url" as const, image_url: { url: imageUrl } },
             {
               type: "text" as const,
               text: `Generate a complete product listing for:
@@ -45,8 +46,7 @@ export async function generateProductDescription({
               Price: ₹${price}
               Category: ${category || "General"}
               Language: ${language === "hi" ? "Hindi" : "English"}
-              
-              Make it compelling for Indian buyers. If language is Hindi, write description in Hindi but keep hashtags in English.`,
+              Make it compelling for Indian buyers.`,
             },
           ]
         : `Generate a complete product listing for:
@@ -81,9 +81,10 @@ export async function generateCreativeImage({
   platform?: string;
   festival?: string;
 }) {
+  const openai = getOpenAI();
   const prompt = festival
-    ? `Professional ${platform} marketing post for Indian seller. Product: ${productName}. Price: ₹${price}. Festival: ${festival} theme. Vibrant colors, festive mood, modern Indian design aesthetic. Include product image prominently.`
-    : `Clean professional ${platform} marketing post for Indian online seller. Product: ${productName}. Price: ₹${price}. Modern Indian design, clean background, eye-catching layout, premium feel.`;
+    ? `Professional ${platform} marketing post for Indian seller. Product: ${productName}. Price: ₹${price}. Festival: ${festival} theme. Vibrant colors, festive mood, modern Indian design aesthetic.`
+    : `Clean professional ${platform} marketing post for Indian online seller. Product: ${productName}. Price: ₹${price}. Modern Indian design, clean background, eye-catching layout.`;
 
   const response = await openai.images.generate({
     model: "dall-e-3",

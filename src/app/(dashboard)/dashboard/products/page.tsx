@@ -1,85 +1,84 @@
-import { Metadata } from "next";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Products",
-};
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import { Plus, ShoppingBag, Eye, Edit, Sparkles } from "lucide-react";
+import { redirect } from "next/navigation";
+import { Plus, Edit, Trash2, Eye, EyeOff, Package } from "lucide-react";
+import ProductActions from "./ProductActions";
 
 export default async function ProductsPage() {
   const session = await getSession();
-  const storeId = session?.storeId ?? "demo-store-001";
+  if (!session) redirect("/auth/signin");
 
-  let products: any[] = [];
-  try {
-    products = await prisma.product.findMany({
-      where: { storeId },
-      orderBy: { createdAt: "desc" },
-    });
-  } catch {
-    // DB not seeded yet — show empty state
-  }
+  const products = await prisma.product.findMany({
+    where: { storeId: session.storeId },
+    orderBy: { createdAt: "desc" },
+  });
 
   return (
-    <div className="animate-fade-in pb-24">
-      <div className="flex items-end justify-between mb-12">
+    <div className="animate-fade-in">
+      <div className="flex items-center justify-between mb-10">
         <div>
-          <h1 className="text-display-lg mb-2">Products</h1>
-          <p className="text-lead text-ink-muted">
-            {products.length} product{products.length !== 1 ? "s" : ""} in your store
-          </p>
+          <h1 className="text-display-lg mb-1">Products</h1>
+          <p className="text-ink-muted">{products.length} products in your store</p>
         </div>
-        <Link href="/dashboard/products/new" className="btn-glow !py-3 !px-6">
-          <Plus size={18} strokeWidth={3} /> Add Product
+        <Link href="/dashboard/products/new" className="btn-glow flex items-center gap-2">
+          <Plus size={18} /> Add Product
         </Link>
       </div>
 
       {products.length === 0 ? (
-        <div className="glass-card min-h-[400px] flex flex-col items-center justify-center text-center border-dashed">
-          <div className="w-20 h-20 rounded-full bg-surface-glass flex items-center justify-center text-ink-muted mb-6">
-            <ShoppingBag size={36} />
-          </div>
-          <h3 className="text-display-md text-ink-muted mb-4">No products yet</h3>
-          <p className="text-lead text-ink-muted max-w-md mb-8">
-            Add your first product and let AI generate the entire marketing campaign for you.
-          </p>
-          <Link href="/dashboard/products/new" className="btn-glow !py-3 !px-8">
-            <Sparkles size={18} /> Add First Product
-          </Link>
+        <div className="glass-card flex flex-col items-center justify-center py-24 text-center border-dashed">
+          <Package size={48} className="text-ink-muted mb-6" />
+          <h2 className="text-display-md mb-3 text-ink-muted">No products yet</h2>
+          <p className="text-ink-muted mb-8">Add your first product and let AI generate the marketing campaign.</p>
+          <Link href="/dashboard/products/new" className="btn-glow">Add First Product</Link>
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((p) => (
-            <div key={p.id} className="glass-card !p-0 overflow-hidden group">
-              <div className="aspect-square bg-surface-glass relative overflow-hidden">
-                {p.imageUrl ? (
-                  <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-ink-muted">
-                    <ShoppingBag size={48} />
-                  </div>
-                )}
-                <div className="absolute top-4 right-4">
-                  <span className={`px-3 py-1.5 rounded-full text-[11px] font-bold border ${p.isActive ? "bg-green-500/20 border-green-500/30 text-green-400" : "bg-surface-glass border-border-glass text-ink-muted"}`}>
-                    {p.isActive ? "Active" : "Draft"}
-                  </span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-bold text-[16px] mb-1 truncate">{p.name}</h3>
-                <div className="flex items-center justify-between mt-3">
-                  <span className="text-[22px] font-display font-bold text-primary">₹{p.price.toLocaleString()}</span>
-                  <div className="flex gap-2">
-                    <Link href={`/dashboard/products/${p.id}/edit`} className="btn-glass !py-2 !px-4 text-caption">
-                      <Edit size={14} /> Edit
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="glass-card !p-0 overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border-glass bg-surface-glass">
+                <th className="text-left px-6 py-4 text-caption font-bold text-ink-muted">Product</th>
+                <th className="text-left px-6 py-4 text-caption font-bold text-ink-muted">Category</th>
+                <th className="text-left px-6 py-4 text-caption font-bold text-ink-muted">Price</th>
+                <th className="text-left px-6 py-4 text-caption font-bold text-ink-muted">Stock</th>
+                <th className="text-left px-6 py-4 text-caption font-bold text-ink-muted">Status</th>
+                <th className="text-right px-6 py-4 text-caption font-bold text-ink-muted">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border-glass">
+              {products.map((product) => (
+                <tr key={product.id} className="hover:bg-surface-glass/50 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      {product.imageUrl ? (
+                        <img src={product.imageUrl} alt={product.name} className="w-10 h-10 rounded-lg object-cover border border-border-glass" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-border-glass">
+                          <Package size={16} className="text-ink-muted" />
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-bold text-[15px]">{product.name}</p>
+                        <p className="text-caption text-ink-muted line-clamp-1">{product.description}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-caption text-ink-muted">{product.category || "—"}</td>
+                  <td className="px-6 py-4 font-bold text-primary">₹{product.price.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-caption">{product.stock}</td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-micro-legal font-bold ${product.isActive ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
+                      {product.isActive ? <><Eye size={12} /> Active</> : <><EyeOff size={12} /> Hidden</>}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <ProductActions productId={product.id} isActive={product.isActive} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

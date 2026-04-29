@@ -15,6 +15,7 @@ model User {
   name          String?
   image         String?
   emailVerified DateTime?
+  passwordHash  String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -84,29 +85,30 @@ model Store {
 }
 
 model Product {
-  id              String   @id @default(cuid())
-  storeId         String
-  name            String
-  description     String?  
-  descriptionHi   String?  
-  price           Float
-  comparePrice    Float?
-  imageUrl        String?
-  images          String   @default("[]") // JSON stringified array for SQLite compat
-  category        String?
-  stock           Int      @default(0)
-  isActive        Boolean  @default(true)
-  tags            String   @default("[]") // JSON stringified
-  hashtags        String   @default("[]") // JSON stringified
-  whatsappCaption String?  
-  instagramCaption String?
-  reelScript      String?
-  facebookAdText  String?
-  whatsappStatus  String?
+  id                   String   @id @default(cuid())
+  storeId              String
+  name                 String
+  description          String?
+  descriptionHi        String?
+  price                Float
+  comparePrice         Float?
+  imageUrl             String?
+  images               String   @default("[]")
+  category             String?
+  stock                Int      @default(0)
+  isActive             Boolean  @default(true)
+  tags                 String   @default("[]")
+  hashtags             String   @default("[]")
+  whatsappCaption      String?
+  instagramCaption     String?
+  reelScript           String?
+  facebookAdText       String?
+  metaAdHeadline       String?
+  whatsappStatus       String?
   festivalBannerPrompt String?
-  aiGenerated     Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  aiGenerated          Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
   store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
   orderItems OrderItem[]

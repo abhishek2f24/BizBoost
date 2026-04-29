@@ -5,12 +5,15 @@ export const metadata: Metadata = {
   title: "CRM & Customers",
 };
 import { getSession } from "@/lib/session";
-import { MessageCircle, Clock, ShoppingBag, ExternalLink, CalendarDays, TrendingUp } from "lucide-react";
+import { redirect } from "next/navigation";
+import { MessageCircle, Clock, ShoppingBag, CalendarDays, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 export default async function CustomerCRM() {
   const session = await getSession();
-  const storeId = session?.storeId ?? "demo-store-001";
+  if (!session) redirect("/auth/signin");
+  const storeId = session.storeId;
+
 
   let orders: any[] = [];
   try {

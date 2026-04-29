@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 
 export async function GET(req: NextRequest) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const storeId = session.storeId;
+
     const { searchParams } = new URL(req.url);
     const days = parseInt(searchParams.get("days") || "7");
     const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
 
     const [
       totalSessions,
@@ -20,27 +26,27 @@ export async function GET(req: NextRequest) {
       sessionsByDay,
     ] = await Promise.all([
       // Total sessions
-      prisma.analyticsSession.count({ where: { startedAt: { gte: since } } }),
+      prisma.analyticsSession.count({ where: { storeId, startedAt: { gte: since } } }),
 
       // Total clicks
       prisma.analyticsEvent.count({
-        where: { event: "click", createdAt: { gte: since } },
+        where: { storeId, event: "click", createdAt: { gte: since } },
       }),
 
       // Rage clicks
       prisma.analyticsEvent.count({
-        where: { event: "rage_click", createdAt: { gte: since } },
+        where: { storeId, event: "rage_click", createdAt: { gte: since } },
       }),
 
       // Page views
       prisma.analyticsEvent.count({
-        where: { event: "pageview", createdAt: { gte: since } },
+        where: { storeId, event: "pageview", createdAt: { gte: since } },
       }),
 
       // Top pages by views
       prisma.analyticsEvent.groupBy({
         by: ["page"],
-        where: { event: "pageview", createdAt: { gte: since } },
+        where: { storeId, event: "pageview", createdAt: { gte: since } },
         _count: { page: true },
         orderBy: { _count: { page: "desc" } },
         take: 10,
@@ -49,7 +55,7 @@ export async function GET(req: NextRequest) {
       // Most clicked elements
       prisma.analyticsEvent.groupBy({
         by: ["element", "elementText"],
-        where: { event: "click", createdAt: { gte: since }, element: { not: null } },
+        where: { storeId, event: "click", createdAt: { gte: since }, element: { not: null } },
         _count: { element: true },
         orderBy: { _count: { element: "desc" } },
         take: 15,
@@ -58,7 +64,7 @@ export async function GET(req: NextRequest) {
       // Pages where users get stuck
       prisma.analyticsEvent.groupBy({
         by: ["page"],
-        where: { event: "user_stuck", createdAt: { gte: since } },
+        where: { storeId, event: "user_stuck", createdAt: { gte: since } },
         _count: { page: true },
         orderBy: { _count: { page: "desc" } },
         take: 5,
@@ -74,13 +80,13 @@ export async function GET(req: NextRequest) {
       // Device breakdown
       prisma.analyticsSession.groupBy({
         by: ["device"],
-        where: { startedAt: { gte: since } },
+        where: { storeId, startedAt: { gte: since } },
         _count: { device: true },
       }),
 
       // Sessions by day
       prisma.analyticsSession.findMany({
-        where: { startedAt: { gte: since } },
+        where: { storeId, startedAt: { gte: since } },
         select: { startedAt: true, duration: true }
       })
     ]);

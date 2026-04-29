@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { Store, ShoppingBag, PieChart, Sparkles, Calendar, Settings, Zap, Users, LogOut, BarChart3 } from "lucide-react";
+import { Store, ShoppingBag, PieChart, Sparkles, Calendar, Settings, Zap, Users, BarChart3, Package } from "lucide-react";
 import SignOutButton from "./SignOutButton";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -13,29 +13,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/auth/signin");
   }
 
-  const storeId = session.storeId ?? "demo-store-001";
-
-  // Safety check: ensure the store exists in the database
-  try {
-    await prisma.store.upsert({
-      where: { id: storeId },
-      update: {},
-      create: {
-        id: storeId,
-        userId: session.userId,
-        name: session.storeName ?? "My Store",
-        slug: "store-" + storeId.toLowerCase().replace(/[^a-z0-9]/g, "-"),
-      }
-    });
-  } catch (e) {
-    console.error("Failed to ensure store exists:", e);
-  }
-
+  const storeId = session.storeId;
   let productCount = 0;
   try {
     productCount = await prisma.product.count({ where: { storeId } });
-  } catch (e) {
-    // DB issue or no products
+  } catch {
+    // DB issue
   }
   const maxProducts = 50;
   const progressPercent = Math.min((productCount / maxProducts) * 100, 100);
@@ -43,17 +26,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const navItems = [
     { href: "/dashboard", label: "Overview", icon: PieChart },
     { href: "/dashboard/products", label: "Products", icon: ShoppingBag },
+    { href: "/dashboard/orders", label: "Orders", icon: Package },
     { href: "/dashboard/store", label: "Storefront", icon: Store },
     { href: "/dashboard/creatives", label: "AI Creatives", icon: Sparkles },
     { href: "/dashboard/campaigns", label: "Campaigns", icon: Calendar },
     { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/dashboard/crm", label: "CRM", icon: Users },
-    { href: "/dashboard/pricing", label: "Pricing", icon: Zap },
   ];
+
+  const storeSlug = (session as any).storeSlug ?? "my-store";
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-body text-ink selection:bg-primary selection:text-white">
-      {/* Background glow */}
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[100px] pointer-events-none z-0" />
 
       {/* Global Nav */}
@@ -67,7 +51,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="flex-1" />
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <span className="text-caption text-ink-muted font-medium hidden md:block">{session.storeName}</span>
+          <Link
+            href={`/store/${storeSlug}`}
+            target="_blank"
+            className="text-caption text-ink-muted font-bold px-3 py-1.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors hidden md:block"
+          >
+            View Store ↗
+          </Link>
           <Link href="/dashboard/settings" className="text-ink-muted hover:text-white transition-colors">
             <Settings size={20} />
           </Link>

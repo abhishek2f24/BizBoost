@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { sessionId, events, userAgent } = body;
+    const { sessionId, events, userAgent, storeId } = body;
 
     if (!sessionId || !events?.length) {
       return NextResponse.json({ ok: false }, { status: 400 });
@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       create: {
         sessionId,
         startPage: page,
+        storeId: storeId || null,
         browser: parseBrowser(userAgent),
         device: parseDevice(userAgent),
       },
@@ -50,6 +51,7 @@ export async function POST(req: NextRequest) {
         metadata?: Record<string, unknown>;
       }) => ({
         sessionId,
+        storeId: storeId || null,
         event: e.event,
         page: e.page,
         element: e.element,

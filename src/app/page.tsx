@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ArrowRight, Camera, Sparkles, Rocket, DollarSign, Zap, Play, CheckCircle2, Link as LinkIcon, Star, Check } from "lucide-react";
 import Image from "next/image";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#2D2D2D] selection:bg-[#FF5C00] selection:text-white font-body relative">
+    <div className="min-h-screen bg-background text-ink selection:bg-primary selection:text-white font-body relative">
       {/* Announcement Bar */}
       <div className="bg-gradient-to-r from-[#FF5C00] to-[#FF8C00] text-white text-center py-2 px-4 text-[13px] font-bold tracking-wide">
         🎉 Launching in India: Accept UPI, GST Invoices, and Cash on Delivery seamlessly with 0% extra transaction fees!
@@ -17,21 +18,22 @@ export default function LandingPage() {
 
       {/* Nav */}
       <div className="flex justify-center pt-8 relative z-20">
-        <nav className="bg-white/80 backdrop-blur-xl border border-black/10 rounded-full px-4 py-2 flex items-center gap-8 shadow-sm">
+        <nav className="bg-surface/80 backdrop-blur-xl border border-ink/10 rounded-full px-4 py-2 flex items-center gap-8 shadow-sm">
           <Link href="/" className="font-display font-bold text-[20px] tracking-tight flex items-center gap-2 pl-4 text-black">
             <div className="w-6 h-6 rounded bg-[#FF5C00] flex items-center justify-center text-white">
               <Zap size={14} className="fill-white" />
             </div>
-            BizBoost<span className="text-[#FF5C00]">.ai</span>
+            BizBoost<span className="text-primary">.ai</span>
           </Link>
-          <div className="hidden md:flex gap-6 font-semibold text-[15px] text-[#2D2D2D]/70">
-            <Link href="#how-it-works" className="hover:text-black transition-colors">How it works</Link>
-            <Link href="#features" className="hover:text-black transition-colors">Features</Link>
-            <Link href="#pricing" className="hover:text-black transition-colors">Pricing</Link>
-            <Link href="#community" className="hover:text-black transition-colors">Community</Link>
+          <div className="hidden md:flex gap-6 font-semibold text-[15px] text-ink/70">
+            <Link href="#how-it-works" className="hover:text-primary transition-colors">How it works</Link>
+            <Link href="#features" className="hover:text-primary transition-colors">Features</Link>
+            <Link href="#pricing" className="hover:text-primary transition-colors">Pricing</Link>
+            <Link href="#community" className="hover:text-primary transition-colors">Community</Link>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="text-[15px] font-bold px-4 hover:text-black transition-colors text-[#2D2D2D]/70">Login</Link>
+            <ThemeToggle />
+            <Link href="/dashboard" className="text-[15px] font-bold px-4 hover:text-ink transition-colors text-ink/70">Login</Link>
             <Link href="/dashboard" className="bg-[#FF5C00] text-white hover:bg-[#FF5C00]/90 transition-colors rounded-full font-bold px-6 py-2 shadow-lg shadow-[#FF5C00]/20">
               Get started
             </Link>
@@ -42,21 +44,21 @@ export default function LandingPage() {
       <main className="relative z-10 pt-24 px-6 max-w-7xl mx-auto">
         {/* Hero Section */}
         <section className="text-center max-w-4xl mx-auto mb-16">
-          <h1 className="text-[48px] md:text-[80px] leading-[1.1] font-display font-bold tracking-tight mb-6 text-black">
+          <h1 className="text-[48px] md:text-[80px] leading-[1.1] font-display font-bold tracking-tight mb-6 text-ink">
             Start selling from <br className="hidden md:block"/>
             <span className="italic font-light text-[#FF5C00]">a single photo</span>
           </h1>
-          <p className="text-[18px] md:text-[22px] text-[#2D2D2D]/70 max-w-3xl mx-auto mb-12">
+          <p className="text-[18px] md:text-[22px] text-ink/70 max-w-3xl mx-auto mb-12">
             BizBoost.ai builds your storefront, runs your Instagram ads, and handles UPI payments. All in minutes. Perfect for Indian creators.
           </p>
           
           <div className="relative max-w-2xl mx-auto mb-12">
-            <div className="flex items-center bg-white border border-black/10 rounded-full p-2 pl-6 shadow-xl transition-all focus-within:border-[#FF5C00]/50 focus-within:shadow-[0_0_30px_rgba(255,92,0,0.15)]">
+            <div className="flex items-center bg-surface border border-ink/10 rounded-full p-2 pl-6 shadow-xl transition-all focus-within:border-primary/50 focus-within:shadow-[0_0_30px_rgba(255,92,0,0.15)]">
               <Camera size={24} className="text-[#2D2D2D]/40 shrink-0" />
               <input 
                 type="text" 
                 placeholder="I want to sell vintage clothes|"
-                className="bg-transparent border-none outline-none flex-1 px-4 text-black placeholder:text-[#2D2D2D]/40 text-[18px]"
+                className="bg-transparent border-none outline-none flex-1 px-4 text-ink placeholder:text-ink/40 text-[18px]"
               />
               <Link href="/dashboard" className="bg-[#FF5C00] text-white font-bold rounded-full px-6 py-3 flex items-center gap-2 hover:bg-[#FF5C00]/90 transition-colors whitespace-nowrap shadow-lg shadow-[#FF5C00]/30">
                 Start for free <ArrowRight size={18} strokeWidth={3} />
@@ -74,11 +76,11 @@ export default function LandingPage() {
               <div className="w-12 h-12 rounded-full border-2 border-[#FAF9F6] bg-black text-white flex items-center justify-center font-bold text-[12px]">+</div>
             </div>
             <div className="flex items-center gap-2 font-display text-[18px]">
-              <div className="flex text-[#FF5C00]">
+              <div className="flex text-primary">
                 <Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" />
               </div>
-              <span className="font-bold text-black animate-pulse">28,000+</span> 
-              <span className="text-[#2D2D2D]/60">businesses built on BizBoost</span>
+              <span className="font-bold text-ink animate-pulse">28,000+</span> 
+              <span className="text-ink/60">businesses built on BizBoost</span>
             </div>
           </div>
         </section>
@@ -92,7 +94,7 @@ export default function LandingPage() {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[25px] bg-black rounded-b-[20px] z-20"></div>
                 
                 {/* Screen Content */}
-                <div className="flex-1 bg-[#F9FAFB] w-full overflow-hidden flex flex-col relative rounded-[40px]">
+                <div className="flex-1 bg-background w-full overflow-hidden flex flex-col relative rounded-[40px]">
                   {/* Mock Store Header */}
                   <div className="h-48 bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80] relative">
                     <div className="absolute bottom-[-30px] left-6 w-20 h-20 rounded-full bg-white p-1 shadow-lg">
@@ -100,23 +102,23 @@ export default function LandingPage() {
                     </div>
                   </div>
                   {/* Mock Store Details */}
-                  <div className="pt-12 px-6 pb-6 bg-white">
-                    <h3 className="font-bold text-[22px] text-black">Aura Ceramics</h3>
+                  <div className="pt-12 px-6 pb-6 bg-surface">
+                    <h3 className="font-bold text-[22px] text-ink">Aura Ceramics</h3>
                     <p className="text-[14px] text-gray-500 mb-4">Handcrafted pottery from Jaipur.</p>
                     <button className="w-full bg-[#FF5C00] text-white py-3 rounded-xl font-bold text-[14px] shadow-md shadow-[#FF5C00]/20">Follow Store</button>
                   </div>
                   {/* Mock Products Grid */}
-                  <div className="flex-1 bg-gray-50 p-4">
-                    <div className="font-bold text-[14px] mb-4 text-black">Featured Products</div>
+                  <div className="flex-1 bg-surface-glass p-4">
+                    <div className="font-bold text-[14px] mb-4 text-ink">Featured Products</div>
                     <div className="grid grid-cols-2 gap-3">
-                       <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
+                       <div className="bg-surface p-2 rounded-xl shadow-sm border border-ink/5">
                          <div className="aspect-square rounded-lg bg-gray-100 mb-2 overflow-hidden">
                            <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=300&q=80" alt="Mug" className="w-full h-full object-cover" />
                          </div>
                          <div className="font-bold text-[12px] text-black">Speckled Mug</div>
                          <div className="text-[#25D366] font-bold text-[12px]">₹850</div>
                        </div>
-                       <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
+                       <div className="bg-surface p-2 rounded-xl shadow-sm border border-ink/5">
                          <div className="aspect-square rounded-lg bg-gray-100 mb-2 overflow-hidden">
                            <img src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=300&q=80" alt="Bowl" className="w-full h-full object-cover" />
                          </div>
@@ -155,7 +157,7 @@ export default function LandingPage() {
         <section className="mb-40 max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="flex flex-col gap-6 group">
-              <h3 className="text-[28px] tracking-tight text-black">sell what you <strong className="font-display font-bold">know</strong></h3>
+              <h3 className="text-[28px] tracking-tight text-ink">sell what you <strong className="font-display font-bold">know</strong></h3>
               <div className="aspect-[4/3] rounded-[24px] bg-gradient-to-br from-[#FFE0B2]/40 to-white border border-black/10 relative overflow-hidden group-hover:border-[#FF5C00]/30 transition-colors shadow-sm">
                 <img src="https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=600&q=80" alt="Coaching" className="absolute inset-0 w-full h-full object-cover opacity-80" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent p-6 flex flex-col justify-end">
@@ -204,7 +206,7 @@ export default function LandingPage() {
         {/* How it works */}
         <section id="how-it-works" className="mb-40 text-center">
           <p className="text-[#FF5C00] text-[18px] mb-2 font-bold uppercase tracking-widest">From idea to paying customer</p>
-          <h2 className="text-[48px] md:text-[56px] font-display font-bold tracking-tight mb-16 text-black">BizBoost.ai is simple</h2>
+          <h2 className="text-[48px] md:text-[56px] font-display font-bold tracking-tight mb-16 text-ink">BizBoost.ai is simple</h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
             
@@ -213,7 +215,7 @@ export default function LandingPage() {
               <div className="w-14 h-14 rounded-full bg-[#FF5C00]/10 flex items-center justify-center mb-6">
                  <Camera size={28} className="text-[#FF5C00]" strokeWidth={2} />
               </div>
-              <h3 className="text-[20px] font-bold mb-3 text-black">Upload photo</h3>
+              <h3 className="text-[20px] font-bold mb-3 text-ink">Upload photo</h3>
               <p className="text-[#2D2D2D]/70 text-[15px] leading-relaxed">Take a photo of your product, skill, or service. Or just describe it.</p>
             </div>
 
@@ -258,14 +260,14 @@ export default function LandingPage() {
              <div className="inline-flex items-center gap-2 text-[#FF5C00] font-bold text-[20px] mb-6">
                <Sparkles size={24} /> Magic Ads
              </div>
-             <h2 className="text-[40px] md:text-[56px] font-display font-bold tracking-tight mb-8 text-black">
+             <h2 className="text-[40px] md:text-[56px] font-display font-bold tracking-tight mb-8 text-ink">
                Run ads <span className="text-gray-400 font-normal">without becoming a marketer.</span>
              </h2>
              <p className="text-[18px] text-[#2D2D2D]/70 max-w-3xl mx-auto mb-16">
                No more complicated Meta Ads manager. Magic Ads helps you launch Instagram & Facebook ads and find customers in 3 clicks.
              </p>
 
-             <div className="w-full aspect-[16/10] bg-white rounded-[40px] border border-black/5 relative overflow-hidden shadow-2xl flex flex-col">
+             <div className="w-full aspect-[16/10] bg-surface rounded-[40px] border border-ink/5 relative overflow-hidden shadow-2xl flex flex-col">
                 <div className="h-16 border-b border-black/5 bg-gray-50 flex items-center px-6">
                    <div className="flex gap-2">
                      <div className="w-3 h-3 rounded-full bg-gray-300"></div>
@@ -304,7 +306,7 @@ export default function LandingPage() {
              <div className="inline-flex items-center gap-2 text-[#FF5C00] font-bold text-[20px] mb-6">
                <Sparkles size={24} /> Magic Content
              </div>
-             <h2 className="text-[40px] md:text-[56px] font-display font-bold tracking-tight mb-8 text-black">
+             <h2 className="text-[40px] md:text-[56px] font-display font-bold tracking-tight mb-8 text-ink">
                Launch content <span className="text-gray-400 font-normal">without a content team.</span>
              </h2>
              <p className="text-[18px] text-[#2D2D2D]/70 max-w-3xl mx-auto mb-16">
@@ -343,14 +345,14 @@ export default function LandingPage() {
              <div className="inline-flex items-center gap-2 text-[#FF5C00] font-bold text-[20px] mb-6">
                <LinkIcon size={24} /> Indian Payments Built-in
              </div>
-             <h2 className="text-[40px] md:text-[56px] font-display font-bold tracking-tight mb-8 text-black">
+             <h2 className="text-[40px] md:text-[56px] font-display font-bold tracking-tight mb-8 text-ink">
                Accept UPI & COD <span className="text-gray-400 font-normal">with 0% platform fees.</span>
              </h2>
              <p className="text-[18px] text-[#2D2D2D]/70 max-w-3xl mx-auto mb-16">
                Indian buyers want UPI, Cards, and Cash on Delivery. We integrate with Razorpay and manage your checkout experience out of the box.
              </p>
 
-             <div className="w-full aspect-[16/10] bg-white rounded-[40px] border border-black/5 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center bg-gradient-to-tr from-gray-50 to-white">
+             <div className="w-full aspect-[16/10] bg-surface rounded-[40px] border border-ink/5 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center bg-gradient-to-tr from-surface/50 to-surface">
                 <div className="w-[400px] bg-white rounded-3xl border border-black/10 p-8 shadow-xl text-black relative">
                    
                    <div className="absolute -top-4 -right-4 bg-[#25D366] text-white text-[12px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
@@ -600,7 +602,7 @@ export default function LandingPage() {
 
       {/* Modern Footer */}
       <div className="px-6 pb-6 mt-10 relative z-20 max-w-7xl mx-auto">
-        <footer className="bg-white border border-black/10 rounded-[40px] p-12 relative overflow-hidden shadow-xl">
+        <footer className="bg-surface border border-ink/10 rounded-[40px] p-12 relative overflow-hidden shadow-xl">
           <div className="grid md:grid-cols-5 gap-10 relative z-10">
              <div className="md:col-span-2">
                 <Link href="/" className="font-display font-bold text-[32px] tracking-tight flex items-center gap-2 mb-2 text-black">

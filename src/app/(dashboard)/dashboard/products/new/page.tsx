@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 import { Upload, Sparkles, AlertCircle, Copy, Check, Camera, MessageCircle, Video, Target, Store } from "lucide-react";
 
 type AIResult = {
@@ -22,6 +24,9 @@ export default function NewProductPage() {
   const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState<"storefront" | "social" | "scripts" | "ads">("storefront");
   const [aiResult, setAiResult] = useState<AIResult | null>(null);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const { toast } = useToast();
+  const router = useRouter();
 
   // Form State
   const [price, setPrice] = useState("");
@@ -64,6 +69,50 @@ export default function NewProductPage() {
     navigator.clipboard.writeText(text);
     setCopiedStates(prev => ({ ...prev, [id]: true }));
     setTimeout(() => setCopiedStates(prev => ({ ...prev, [id]: false })), 2000);
+  };
+
+  const handlePublish = async () => {
+    if (!aiResult || !productName || !price) {
+      toast({
+        title: "Missing Details",
+        description: "Please generate AI content before publishing.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsPublishing(true);
+    try {
+      const res = await fetch("/api/products/publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productName,
+          price,
+          category,
+          ...aiResult
+        })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        toast({
+          title: "Product Published!",
+          description: "Your product is now live on your store.",
+        });
+        router.push("/dashboard/products");
+      } else {
+        throw new Error(data.error || "Failed to publish");
+      }
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   return (
@@ -270,23 +319,40 @@ export default function NewProductPage() {
 
                 {activeTab === "ads" && (
                   <div className="space-y-6 animate-fade-in">
-                     <div>
-                      <div className="flex justify-between items-center mb-3">
-                        <label className="block text-caption font-bold text-ink-muted">Facebook Ad Copy</label>
-                        <button onClick={() => handleCopy(aiResult.facebookAdText, 'fb')} className="text-primary text-caption font-bold flex items-center gap-1">
-                          {copiedStates['fb'] ? <Check size={16} /> : <Copy size={16} />} Copy Ad Text
-                        </button>
+                    <div className="glass-card !bg-surface-glass border-blue-500/20">
+                      <div className="flex items-center gap-2 mb-4 text-blue-400">
+                        <div className="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center">
+                          <Rocket size={12} />
+                        </div>
+                        <span className="text-caption font-bold uppercase tracking-wider">Meta Ad Preview</span>
                       </div>
-                      <div className="bg-[#1877F2]/5 p-6 rounded-xl border border-[#1877F2]/20 text-body text-white whitespace-pre-wrap font-medium">
-                        {aiResult.facebookAdText}
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-[12px] font-bold text-ink-muted mb-1 uppercase">Headline</label>
+                          <div className="text-title font-bold text-white bg-surface p-3 rounded-lg border border-border-glass">
+                            {aiResult.metaAdHeadline || `Get the New ${productName}!`}
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[12px] font-bold text-ink-muted mb-1 uppercase">Primary Text</label>
+                          <div className="text-body text-ink-muted bg-surface p-3 rounded-lg border border-border-glass whitespace-pre-wrap">
+                            {aiResult.facebookAdText}
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                           <button onClick={() => handleCopy(aiResult.metaAdHeadline, 'fb-h')} className="btn-secondary !py-2 !px-4 text-caption">Copy Headline</button>
+                           <button onClick={() => handleCopy(aiResult.facebookAdText, 'fb-t')} className="btn-secondary !py-2 !px-4 text-caption">Copy Text</button>
+                        </div>
                       </div>
                     </div>
-                    
-                    <div>
-                      <label className="block text-caption font-bold text-ink-muted mb-3">AI Banner Generation Prompt (Midjourney / DALL-E)</label>
-                      <div className="bg-surface p-6 rounded-xl border border-border-glass text-caption text-ink-muted whitespace-pre-wrap font-medium italic">
-                        {aiResult.festivalBannerPrompt}
-                      </div>
+
+                    <div className="glass-card border-purple-500/20">
+                       <h4 className="text-caption font-bold text-purple-400 mb-4 uppercase tracking-wider">Creative Prompt</h4>
+                       <p className="text-body text-ink-muted italic mb-4">"{aiResult.festivalBannerPrompt}"</p>
+                       <button className="btn-glow !bg-purple-600 !shadow-[0_0_15px_rgba(147,51,234,0.4)] w-full">Generate Image with DALL-E</button>
                     </div>
                   </div>
                 )}
@@ -298,8 +364,19 @@ export default function NewProductPage() {
       
       {/* Sticky Bottom Bar */}
       <div className="fixed bottom-0 left-64 right-0 bg-background/80 backdrop-blur-xl border-t border-border-glass p-6 flex justify-end gap-4 z-40">
-        <button className="btn-glass !py-3 !px-8 text-ink-muted">Save as Draft</button>
-        <button className="btn-glow !py-3 !px-12 text-[18px]">Publish to Store</button>
+        <button 
+          className="btn-glass !py-3 !px-8 text-ink-muted"
+          disabled={isPublishing}
+        >
+          Save as Draft
+        </button>
+        <button 
+          className="btn-glow !py-3 !px-12 text-[18px] disabled:opacity-50"
+          onClick={handlePublish}
+          disabled={isPublishing || !aiResult}
+        >
+          {isPublishing ? "Publishing..." : "Publish to Store"}
+        </button>
       </div>
     </div>
   );

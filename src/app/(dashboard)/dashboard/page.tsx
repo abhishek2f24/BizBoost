@@ -85,7 +85,7 @@ export default async function DashboardHome() {
         <div className="glass-card relative overflow-hidden group border-primary/30 shadow-[0_0_30px_rgba(255,92,0,0.1)]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent z-0 group-hover:from-primary/20 transition-colors"></div>
           <div className="relative z-10 flex flex-col h-full justify-between">
-            <div className="flex items-center gap-3 text-white mb-6">
+            <div className="flex items-center gap-3 text-ink mb-6">
               <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white shadow-[0_0_15px_rgba(255,92,0,0.5)]">
                 <Store size={20} />
               </div>
@@ -93,7 +93,7 @@ export default async function DashboardHome() {
             </div>
             <div>
               <p className="text-title font-bold mb-4">{storePublished ? "Live & Active" : "Not published yet"}</p>
-              <Link href="/dashboard/store" className="btn-glass !py-2 !px-4 w-fit border-primary/50 text-white hover:bg-primary hover:border-primary">
+              <Link href="/dashboard/store" className="btn-glass !py-2 !px-4 w-fit border-primary/50 text-ink hover:bg-primary hover:border-primary hover:text-white">
                 {storePublished ? "Manage store" : "Set up store"} <ExternalLink size={16} />
               </Link>
             </div>
@@ -120,7 +120,7 @@ export default async function DashboardHome() {
             <div>
               <h4 className="text-title font-bold mb-2 text-ink">Customize your store</h4>
               <p className="text-body text-ink-muted mb-4">Add your logo, name, and UPI details.</p>
-              <Link href="/dashboard/store" className="btn-glass !text-caption !py-2 !px-6 hover:bg-white hover:text-background">Customize Store</Link>
+              <Link href="/dashboard/store" className="btn-glass !text-caption !py-2 !px-6 hover:bg-primary hover:text-white hover:border-primary">Customize Store</Link>
             </div>
           </div>
           
@@ -129,7 +129,7 @@ export default async function DashboardHome() {
             <div>
               <h4 className="text-title font-bold mb-2 text-ink">Share on WhatsApp</h4>
               <p className="text-body text-ink-muted mb-4">Generate your first WhatsApp blast and start getting orders.</p>
-              <Link href="/dashboard/campaigns" className="btn-glass !text-caption !py-2 !px-6 hover:bg-white hover:text-background">View Campaigns</Link>
+              <Link href="/dashboard/campaigns" className="btn-glass !text-caption !py-2 !px-6 hover:bg-primary hover:text-white hover:border-primary">View Campaigns</Link>
             </div>
           </div>
         </div>

@@ -22,42 +22,9 @@ export default async function StorefrontPage({ params }: { params: { slug: strin
     console.error("Storefront DB Error:", err);
   }
 
-  // If no store found in DB during demo, mock a premium store
+  // If no store found in DB, return 404
   if (!store) {
-    store = {
-      id: "demo-store",
-      name: "Handcrafted by Anjali",
-      description: "Discover our hand-picked selection of ethnic wear and jewelry. Handcrafted with love by master artisans.",
-      slug: params.slug,
-      language: "en",
-      theme: "saffron",
-      banner: null,
-      logo: null,
-      phone: null,
-      upiId: null,
-      userId: "demo",
-      isPublished: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      products: [
-        { 
-          id: "1", storeId: "demo", name: "Saffron Silk Saree", price: 4999, comparePrice: null, 
-          description: "Premium silk saree handcrafted by artisans.", imageUrl: "https://images.unsplash.com/photo-1610030469983-98e550d615ef?auto=format&fit=crop&q=80&w=800",
-          images: "[]", category: "Apparel", stock: 10, isActive: true, tags: "[]", hashtags: "[]", 
-          whatsappCaption: null, instagramCaption: null, reelScript: null, facebookAdText: null, 
-          whatsappStatus: null, festivalBannerPrompt: null, aiGenerated: false, descriptionHi: null,
-          createdAt: new Date(), updatedAt: new Date()
-        },
-        { 
-          id: "2", storeId: "demo", name: "Kundan Necklace Set", price: 2499, comparePrice: null, 
-          description: "Authentic Kundan set.", imageUrl: "https://images.unsplash.com/photo-1599643478524-fb66f4568eb8?auto=format&fit=crop&q=80&w=800",
-          images: "[]", category: "Jewelry", stock: 10, isActive: true, tags: "[]", hashtags: "[]", 
-          whatsappCaption: null, instagramCaption: null, reelScript: null, facebookAdText: null, 
-          whatsappStatus: null, festivalBannerPrompt: null, aiGenerated: false, descriptionHi: null,
-          createdAt: new Date(), updatedAt: new Date()
-        }
-      ]
-    };
+    notFound();
   }
 
   return (

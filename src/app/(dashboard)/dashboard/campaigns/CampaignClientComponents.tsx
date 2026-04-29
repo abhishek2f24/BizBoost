@@ -8,21 +8,58 @@ export function CampaignButton({ festival }: { festival: string }) {
   const { toast } = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setIsGenerating(true);
     toast({
       title: `Generating ${festival} Campaign...`,
       description: "AI is creating WhatsApp blasts, social posts, and ad copies. Please wait.",
     });
 
-    setTimeout(() => {
+    try {
+      // 1. Generate the campaign using AI
+      const genRes = await fetch("/api/ai/generate-campaign", {
+        method: "POST",
+        body: JSON.stringify({
+          productName: festival + " Special Collection",
+          price: "Varies",
+          category: "Festive"
+        }),
+      });
+
+      if (!genRes.ok) throw new Error("Failed to generate campaign assets");
+      const campaignData = await genRes.json();
+
+      // 2. Save to database
+      const saveRes = await fetch("/api/campaigns/save", {
+        method: "POST",
+        body: JSON.stringify({
+          name: `${festival} 2025 Campaign`,
+          festival: festival,
+          message: campaignData.whatsappCaption,
+          imageUrl: null, // AI image generation would happen here in a full flow
+        }),
+      });
+
+      if (!saveRes.ok) throw new Error("Failed to save campaign");
+
       setIsGenerating(false);
       toast({
         title: "Campaign Generated!",
-        description: `Your marketing assets for ${festival} are ready to review.`,
+        description: `Your marketing assets for ${festival} are ready to review in the Campaigns tab.`,
         variant: "default",
       });
-    }, 2500);
+      
+      // Refresh the page to show the new campaign
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      setIsGenerating(false);
+      toast({
+        title: "Generation Failed",
+        description: "There was an issue creating your campaign. Please check your API keys.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

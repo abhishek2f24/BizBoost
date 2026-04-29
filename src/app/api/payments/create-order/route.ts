@@ -8,8 +8,11 @@ export async function POST(req: NextRequest) {
 
     const amount = planId === "pro" ? 999900 : 199900; // in paise
     
+    const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
     // Check if keys are provided
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    if (!keyId || !keySecret) {
       console.warn("Razorpay keys missing, returning mock order");
       return NextResponse.json({
         id: "order_mock_" + Math.random().toString(36).slice(2, 9),
@@ -19,8 +22,8 @@ export async function POST(req: NextRequest) {
     }
 
     const instance = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID,
-      key_secret: process.env.RAZORPAY_KEY_SECRET,
+      key_id: keyId,
+      key_secret: keySecret,
     });
 
     const options = {

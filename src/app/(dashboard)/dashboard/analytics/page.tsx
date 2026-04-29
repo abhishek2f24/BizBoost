@@ -28,22 +28,56 @@ type OverviewData = {
 export default function AnalyticsDashboard() {
   const [data, setData] = useState<OverviewData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [days, setDays] = useState(7);
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
     fetch(`/api/analytics/overview?days=${days}`)
-      .then(res => res.json())
+      .then(async res => {
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || "Failed to fetch analytics");
+        }
+        return res.json();
+      })
       .then(d => {
         setData(d);
         setLoading(false);
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error(err);
+        setError(err.message);
+        setLoading(false);
+      });
   }, [days]);
 
-  if (loading || !data) {
+  if (loading) {
     return (
-      <div className="flex h-[400px] items-center justify-center">
+      <div className="flex h-[400px] flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-caption text-ink-muted font-bold">Loading live analytics...</p>
+      </div>
+    );
+  }
+
+  if (error || !data || data.error) {
+    return (
+      <div className="flex h-[400px] flex-col items-center justify-center text-center p-8 glass-card border-red-500/30">
+        <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-6">
+          <Activity size={32} />
+        </div>
+        <h3 className="text-display-md mb-2">Analytics Unavailable</h3>
+        <p className="text-lead text-ink-muted max-w-md mb-8">
+          {error || (data as any)?.error || "We encountered an issue while fetching your analytics data. Please try again later."}
+        </p>
+        <button 
+          onClick={() => setDays(days)} 
+          className="btn-glow !bg-red-500 !shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+        >
+          Try Again
+        </button>
       </div>
     );
   }

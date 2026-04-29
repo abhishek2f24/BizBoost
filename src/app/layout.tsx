@@ -37,6 +37,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 export default function RootLayout({
   children,
 }: {
@@ -49,8 +51,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
-        <AnalyticsProvider>{children}</AnalyticsProvider>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <AnalyticsProvider>{children}</AnalyticsProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

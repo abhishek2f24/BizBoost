@@ -5,17 +5,29 @@
   --color-primary-focus: #FF7B33;
   --color-primary-glow: rgba(255, 92, 0, 0.4);
   
-  --color-background: #050505; /* Deep Void */
-  --color-surface: #0a0a0a;
-  --color-surface-glass: rgba(255, 255, 255, 0.03);
-  --color-surface-glass-hover: rgba(255, 255, 255, 0.06);
-  --color-surface-card: #121212;
+  /* Default (Light) Theme Variables */
+  --color-background: #FAF9F6;
+  --color-surface: #ffffff;
+  --color-surface-glass: rgba(0, 0, 0, 0.03);
+  --color-surface-glass-hover: rgba(0, 0, 0, 0.06);
+  --color-surface-card: #ffffff;
   
-  --color-ink: #ffffff;
-  --color-ink-muted: #a1a1aa;
+  --color-ink: #2D2D2D;
+  --color-ink-muted: #666666;
   
-  --color-border-glass: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.15);
+  --color-border-glass: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.15);
+
+  /* Dark Theme Overrides */
+  --color-dark-background: #050505;
+  --color-dark-surface: #0a0a0a;
+  --color-dark-surface-glass: rgba(255, 255, 255, 0.03);
+  --color-dark-surface-glass-hover: rgba(255, 255, 255, 0.06);
+  --color-dark-surface-card: #121212;
+  --color-dark-ink: #ffffff;
+  --color-dark-ink-muted: #a1a1aa;
+  --color-dark-border-glass: rgba(255, 255, 255, 0.08);
+  --color-dark-border-hover: rgba(255, 255, 255, 0.15);
 
   --font-display: "Outfit", "Plus Jakarta Sans", "Inter", sans-serif;
   --font-body: "Inter", sans-serif;
@@ -51,12 +63,35 @@
 }
 
 @layer base {
+  :root {
+    --background: var(--color-background);
+    --foreground: var(--color-ink);
+  }
+
+  .dark {
+    --background: var(--color-dark-background);
+    --foreground: var(--color-dark-ink);
+    --color-background: var(--color-dark-background);
+    --color-surface: var(--color-dark-surface);
+    --color-surface-glass: var(--color-dark-surface-glass);
+    --color-surface-glass-hover: var(--color-dark-surface-glass-hover);
+    --color-surface-card: var(--color-dark-surface-card);
+    --color-ink: var(--color-dark-ink);
+    --color-ink-muted: var(--color-dark-ink-muted);
+    --color-border-glass: var(--color-dark-border-glass);
+    --color-border-hover: var(--color-dark-border-hover);
+  }
+
   body {
     @apply bg-background text-ink font-body antialiased;
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-display text-ink font-bold;
+    color: var(--foreground);
   }
 }
 

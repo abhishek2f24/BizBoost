@@ -4,6 +4,7 @@ import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { Store, ShoppingBag, PieChart, Sparkles, Calendar, Settings, Zap, Users, LogOut, BarChart3 } from "lucide-react";
 import SignOutButton from "./SignOutButton";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
@@ -48,6 +49,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </Link>
         <div className="flex-1" />
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <span className="text-caption text-ink-muted font-medium hidden md:block">{session.storeName}</span>
           <Link href="/dashboard/settings" className="text-ink-muted hover:text-white transition-colors">
             <Settings size={20} />
@@ -59,9 +61,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
       </nav>
 
-      <div className="flex flex-1 overflow-hidden max-w-[1600px] mx-auto w-full z-10 relative">
+      <div className="flex flex-1 max-w-[1600px] mx-auto w-full z-10 relative overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 border-r border-border-glass bg-surface-glass backdrop-blur-md flex flex-col sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+        <aside className="w-64 border-r border-border-glass bg-surface-glass backdrop-blur-md flex flex-col sticky top-0 h-[calc(100vh-4rem)] overflow-y-auto hidden lg:flex">
           <div className="p-6 flex-1">
             <h2 className="text-micro-legal text-ink-muted font-bold uppercase tracking-widest mb-6">Menu</h2>
             <nav className="space-y-1">
@@ -93,7 +95,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-8 lg:p-12 min-h-[calc(100vh-4rem)]">
+        <main className="flex-1 overflow-y-auto h-[calc(100vh-4rem)] p-8 lg:p-12 scroll-smooth">
           <div className="max-w-6xl mx-auto">
             {children}
           </div>

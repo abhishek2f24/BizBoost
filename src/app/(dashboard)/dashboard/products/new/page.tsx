@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { Upload, Sparkles, AlertCircle, Copy, Check, Camera, MessageCircle, Video, Target, Store } from "lucide-react";
+import { Upload, Sparkles, AlertCircle, Copy, Check, Camera, MessageCircle, Video, Target, Store, Rocket } from "lucide-react";
 
 type AIResult = {
   title: string;
@@ -12,6 +12,7 @@ type AIResult = {
   instagramCaption: string;
   reelScript: string;
   facebookAdText: string;
+  metaAdHeadline: string;
   whatsappStatus: string;
   hashtags: string[];
   festivalBannerPrompt: string;

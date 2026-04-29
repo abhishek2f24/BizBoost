@@ -11,7 +11,7 @@ let prisma: PrismaClient;
 if (globalForPrisma.prisma) {
   prisma = globalForPrisma.prisma;
 } else {
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = "postgresql://postgres.ngivaozrabxyyyxqfdbx:%40BHI2f24@aws-1-ap-south-1.pooler.supabase.com:6543/postgres?pgbouncer=true";
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool);
   prisma = new PrismaClient({ adapter });
